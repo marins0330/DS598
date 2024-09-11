@@ -1,0 +1,9 @@
+{
+	"name": "phsdatafactory",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2a98f462-fb56-4430-9fb7-32f7be1ddeb1",
+		"tenantId": "d57d32cc-c121-488f-b07b-dfe705680c71"
+	}
+}
