@@ -76,7 +76,10 @@
 							"outputs": [
 								{
 									"referenceName": "WeatherSink",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"filename": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+									}
 								}
 							]
 						}
