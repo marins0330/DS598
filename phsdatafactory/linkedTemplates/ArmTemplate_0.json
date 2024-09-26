@@ -215,7 +215,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "AirPollution",
+						"fileName": "AirPollution_History.json",
 						"folderPath": "Bronze",
 						"fileSystem": "phsblob"
 					}
