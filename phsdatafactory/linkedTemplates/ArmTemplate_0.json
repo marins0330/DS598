@@ -151,7 +151,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "airPollutionData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+							"value": "airPollutionData.json",
 							"type": "Expression"
 						},
 						"folderPath": "Bronze",
@@ -270,7 +270,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "weatherData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+							"value": "weatherData.json",
 							"type": "Expression"
 						},
 						"folderPath": "Bronze",
