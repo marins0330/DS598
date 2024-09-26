@@ -119,7 +119,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AirPollutionSourc",
+								"referenceName": "AirPollutionSource",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -139,7 +139,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AirPollutionSourc')]",
+				"[concat(variables('factoryId'), '/datasets/AirPollutionSource')]",
 				"[concat(variables('factoryId'), '/datasets/AirPollutionSink')]"
 			]
 		},
@@ -271,7 +271,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AirPollutionSourc')]",
+			"name": "[concat(parameters('factoryName'), '/AirPollutionSource')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
