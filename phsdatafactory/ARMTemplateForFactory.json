@@ -425,7 +425,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"filename": {
-													"value": "Weather_History_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+													"value": "@{formatDateTime(addDays(utcNow(), add(mul(-7, add(item(), 1)), -7)), 'yyyyMMdd')}",
 													"type": "Expression"
 												}
 											}
@@ -546,7 +546,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@dataset().filename",
+							"value": "@concat('Weather_History_', dataset().filename, '.json')",
 							"type": "Expression"
 						},
 						"folderPath": "Bronze/History",
