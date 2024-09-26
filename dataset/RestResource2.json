@@ -1,0 +1,29 @@
+{
+	"name": "RestResource2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestService_AirPollution",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"lat": {
+				"type": "string",
+				"defaultValue": "\"42.3601\""
+			},
+			"lon": {
+				"type": "string",
+				"defaultValue": "\"-71.0589\""
+			},
+			"appid": {
+				"type": "string",
+				"defaultValue": "@activity('GetAPIKey').output.value"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}"
+		},
+		"schema": []
+	}
+}
