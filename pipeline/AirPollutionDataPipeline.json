@@ -13,7 +13,6 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
 				"typeProperties": {
 					"method": "GET",
 					"url": "https://phs-ds587-keyvault.vault.azure.net/secrets/APIKey?api-version=7.0",
@@ -87,6 +86,11 @@
 				]
 			}
 		],
+		"variables": {
+			"dateRanges": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
