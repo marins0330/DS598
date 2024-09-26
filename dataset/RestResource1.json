@@ -14,10 +14,6 @@
 				"type": "string",
 				"defaultValue": "-71.0589"
 			},
-			"dataType": {
-				"type": "string",
-				"defaultValue": "hour"
-			},
 			"start": {
 				"type": "string"
 			},
