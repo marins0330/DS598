@@ -33,7 +33,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "data/2.5/history/city?lat=@{dataset().lat}&lon=@{dataset().lon}&type=@{dataset().dataType}&start=@{dataset().start}&end=@{dataset().end}&appid=@{dataset().appid}",
+				"value": "data/2.5/history/city?lat=@{dataset().lat}&lon=@{dataset().lon}&type=hour&start=@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}&end=@{div(sub(ticks(addDays(utcNow(), mul(-7, item()))), ticks('1970-01-01T00:00:00Z')), 10000000)}&appid=@{dataset().appid}",
 				"type": "Expression"
 			}
 		},
