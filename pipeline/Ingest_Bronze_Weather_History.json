@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "ForEachDateRange",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -15,6 +15,11 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@range(0, 52)",
+						"type": "Expression"
+					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "WeatherData",
@@ -29,8 +34,23 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
 								"enableStaging": false
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "RestResource1",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
@@ -55,30 +75,8 @@
 						"resource": "https://vault.azure.net"
 					}
 				}
-			},
-			{
-				"name": "GenerateDateRanges",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "dateRanges",
-					"value": {
-						"value": "@createArray(\n    range(0, 52).map(i => \n        addDays(utcNow(), mul(-7, add(i, 1))),\n        addDays(utcNow(), mul(-7, i)))\n)",
-						"type": "Expression"
-					}
-				}
 			}
 		],
-		"variables": {
-			"dateRanges": {
-				"type": "Array"
-			}
-		},
 		"annotations": []
 	}
 }
