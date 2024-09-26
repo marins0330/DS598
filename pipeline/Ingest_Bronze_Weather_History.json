@@ -55,6 +55,23 @@
 						"resource": "https://vault.azure.net"
 					}
 				}
+			},
+			{
+				"name": "GenerateDateRanges",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "dateRanges",
+					"value": {
+						"value": "@createArray(\n    range(0, 52).map(i => \n        addDays(utcNow(), mul(-7, add(i, 1))),\n        addDays(utcNow(), mul(-7, i)))\n)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {

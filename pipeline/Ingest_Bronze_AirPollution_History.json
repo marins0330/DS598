@@ -91,6 +91,11 @@
 				]
 			}
 		],
+		"variables": {
+			"dateRanges": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
