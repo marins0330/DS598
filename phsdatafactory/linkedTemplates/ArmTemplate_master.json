@@ -43,6 +43,10 @@
 			"type": "string",
 			"defaultValue": "https://history.openweathermap.org/"
 		},
+		"REST_Bronze_Weather_History_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://history.openweathermap.org/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -96,6 +100,9 @@
 					},
 					"RestService_Weather_properties_typeProperties_url": {
 						"value": "[parameters('RestService_Weather_properties_typeProperties_url')]"
+					},
+					"REST_Bronze_Weather_History_properties_typeProperties_url": {
+						"value": "[parameters('REST_Bronze_Weather_History_properties_typeProperties_url')]"
 					}
 				}
 			},

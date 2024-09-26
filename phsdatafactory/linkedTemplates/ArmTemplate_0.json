@@ -42,6 +42,10 @@
 		"RestService_Weather_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://history.openweathermap.org/"
+		},
+		"REST_Bronze_Weather_History_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://history.openweathermap.org/"
 		}
 	},
 	"variables": {
@@ -157,6 +161,21 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/REST_Bronze_Weather_History')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('REST_Bronze_Weather_History_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AirPollutionSource')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -227,7 +246,84 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HistAirPollPipeline')]",
+			"name": "[concat(parameters('factoryName'), '/RestResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "REST_Bronze_Weather_History",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"lat": {
+						"type": "string",
+						"defaultValue": "42.3601"
+					},
+					"lon": {
+						"type": "string",
+						"defaultValue": "-71.0589"
+					},
+					"start": {
+						"type": "string"
+					},
+					"end": {
+						"type": "string"
+					},
+					"appid": {
+						"type": "string",
+						"defaultValue": "@activity('GetAPIKey').output.value"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "data/2.5/history/city?lat=@{dataset().lat}&lon=@{dataset().lon}&type=hour&start=@{dataset().start}&end=@{dataset().end}&appid=@{dataset().appid}\n",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/REST_Bronze_Weather_History')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WeatherSink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string",
+						"defaultValue": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "Weather_History_@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": "Bronze/History",
+						"fileSystem": "phsblob"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ingest_Bronze_AirPollution_History')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -255,7 +351,7 @@
 						}
 					},
 					{
-						"name": "Copy data1",
+						"name": "AirPollutionData",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -326,11 +422,139 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"dateRanges": {
+						"type": "Array"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AirPollutionSource')]",
 				"[concat(variables('factoryId'), '/datasets/AirPollutionSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ingest_Bronze_Weather_History')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachDateRange",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetAPIKey",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@range(0, 52)",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "WeatherData",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET",
+											"paginationRules": {
+												"supportRFC5988": "true"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "RestResource1",
+											"type": "DatasetReference",
+											"parameters": {
+												"lat": "42.3601",
+												"lon": "-71.0589",
+												"start": {
+													"value": "@div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)",
+													"type": "Expression"
+												},
+												"end": {
+													"value": "@div(sub(ticks(addDays(utcNow(), mul(-7, item()))), ticks('1970-01-01T00:00:00Z')), 10000000)",
+													"type": "Expression"
+												},
+												"appid": "@activity('GetAPIKey').output.value"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "WeatherSink",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "GetAPIKey",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": "https://phs-ds587-keyvault.vault.azure.net/secrets/APIKey?api-version=7.0",
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://vault.azure.net"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/RestResource1')]",
+				"[concat(variables('factoryId'), '/datasets/WeatherSink')]"
 			]
 		}
 	]

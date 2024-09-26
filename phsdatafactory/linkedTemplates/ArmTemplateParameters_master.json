@@ -32,6 +32,9 @@
 		"RestService_Weather_properties_typeProperties_url": {
 			"value": "https://history.openweathermap.org/"
 		},
+		"REST_Bronze_Weather_History_properties_typeProperties_url": {
+			"value": "https://history.openweathermap.org/"
+		},
 		"containerUri": {
 			"value": ""
 		},
