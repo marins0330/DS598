@@ -1,0 +1,12 @@
+{
+	"name": "AirPollutionSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestService_AirPollution",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
