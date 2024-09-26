@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'credential' of 'GitHub1'"
 		},
+		"AirPollutionREST_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://phsstorage.dfs.core.windows.net/"
@@ -26,6 +30,10 @@
 		"GitHub1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "marins0330"
+		},
+		"HttpAirPollution_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.openweathermap.org/"
 		},
 		"RestService_AirPollution_properties_typeProperties_url": {
 			"type": "string",
@@ -41,7 +49,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/AirPollutionDataPipeline')]",
+			"name": "[concat(parameters('factoryName'), '/HistAirPollPipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -69,7 +77,7 @@
 						}
 					},
 					{
-						"name": "Copy Historical Data",
+						"name": "Copy data1",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -89,12 +97,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"supportRFC5988": "true"
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
 								}
 							},
 							"sink": {
@@ -110,23 +119,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "RestResource2",
+								"referenceName": "AirPollutionSourc",
 								"type": "DatasetReference",
-								"parameters": {
-									"lat": "\"42.3601\"",
-									"lon": "\"-71.0589\"",
-									"start": {
-										"value": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
-										"type": "Expression"
-									},
-									"end": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
-									"appid": "@activity('GetAPIKey').output.value"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "AirPollutionjson",
+								"referenceName": "AirPollutionSink",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -139,12 +139,12 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/RestResource2')]",
-				"[concat(variables('factoryId'), '/datasets/AirPollutionjson')]"
+				"[concat(variables('factoryId'), '/datasets/AirPollutionSourc')]",
+				"[concat(variables('factoryId'), '/datasets/AirPollutionSink')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HistoricalWeatherDataPipeline')]",
+			"name": "[concat(parameters('factoryName'), '/HistWeatherPipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -231,8 +231,14 @@
 												"lat": "\"42.3601\"",
 												"lon": "\"-71.0589\"",
 												"dataType": "\"hour\"",
-												"start": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
-												"end": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
+												"start": {
+													"value": "@div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
+													"type": "Expression"
+												},
+												"end": {
+													"value": "@div(sub(ticks(addDays(utcNow(), mul(-7, item()))), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
+													"type": "Expression"
+												},
 												"appid": "@activity('GetAPIKey').output.value"
 											}
 										}
@@ -265,25 +271,30 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AirPollutionSource')]",
+			"name": "[concat(parameters('factoryName'), '/AirPollutionSourc')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "RestService_AirPollution",
+					"referenceName": "HttpAirPollution",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {},
-				"schema": []
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
+					}
+				},
+				"schema": {}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/RestService_AirPollution')]"
+				"[concat(variables('factoryId'), '/linkedServices/HttpAirPollution')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AirPollutionjson')]",
+			"name": "[concat(parameters('factoryName'), '/AirPollutionSink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -296,10 +307,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "airPollutionData.json",
-							"type": "Expression"
-						},
 						"folderPath": "Bronze",
 						"fileSystem": "phsblob"
 					}
@@ -365,7 +372,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "RestService_AirPollution",
+					"referenceName": "AirPollutionREST",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -393,12 +400,12 @@
 				"annotations": [],
 				"type": "RestResource",
 				"typeProperties": {
-					"relativeUrl": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
+					"relativeUrl": ""
 				},
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/RestService_AirPollution')]"
+				"[concat(variables('factoryId'), '/linkedServices/AirPollutionREST')]"
 			]
 		},
 		{
@@ -428,6 +435,21 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AirPollutionREST')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('AirPollutionREST_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage')]",
@@ -473,6 +495,21 @@
 						"value": "[parameters('GitHub1_credential')]"
 					},
 					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDkzRUI2RTRCLTY0NzYtNEE2OS1COEJCLTBGMzRGMDU5OTNBNl84MzA4ZTc2MS1lNjRkLTQzZjItYTU0ZC1jMzc2OTg4OTFmMjciDQp9"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HttpAirPollution')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('HttpAirPollution_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []

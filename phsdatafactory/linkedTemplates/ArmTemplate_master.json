@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'credential' of 'GitHub1'"
 		},
+		"AirPollutionREST_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://phsstorage.dfs.core.windows.net/"
@@ -26,6 +30,10 @@
 		"GitHub1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "marins0330"
+		},
+		"HttpAirPollution_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.openweathermap.org/"
 		},
 		"RestService_AirPollution_properties_typeProperties_url": {
 			"type": "string",
@@ -68,6 +76,9 @@
 					"GitHub1_credential": {
 						"value": "[parameters('GitHub1_credential')]"
 					},
+					"AirPollutionREST_properties_typeProperties_url": {
+						"value": "[parameters('AirPollutionREST_properties_typeProperties_url')]"
+					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
 					},
@@ -76,6 +87,9 @@
 					},
 					"GitHub1_properties_typeProperties_username": {
 						"value": "[parameters('GitHub1_properties_typeProperties_username')]"
+					},
+					"HttpAirPollution_properties_typeProperties_url": {
+						"value": "[parameters('HttpAirPollution_properties_typeProperties_url')]"
 					},
 					"RestService_AirPollution_properties_typeProperties_url": {
 						"value": "[parameters('RestService_AirPollution_properties_typeProperties_url')]"
