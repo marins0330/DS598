@@ -78,7 +78,15 @@
 							"inputs": [
 								{
 									"referenceName": "RestResource1",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"lat": "\"42.3601\"",
+										"lon": "\"-71.0589\"",
+										"dataType": "\"hour\"",
+										"start": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
+										"end": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
+										"appid": "@activity('GetAPIKey').output.value"
+									}
 								}
 							],
 							"outputs": [
