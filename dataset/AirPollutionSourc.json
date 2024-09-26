@@ -1,5 +1,5 @@
 {
-	"name": "AirPollutionJSON",
+	"name": "AirPollutionSourc",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HttpAirPollution",
