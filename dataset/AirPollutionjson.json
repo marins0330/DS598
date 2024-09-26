@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "airPollutionData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+				"fileName": {
+					"value": "airPollutionData.json",
+					"type": "Expression"
+				},
 				"folderPath": "Bronze",
 				"fileSystem": "phsblob"
 			}

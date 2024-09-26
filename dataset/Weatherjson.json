@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "weatherData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+				"fileName": {
+					"value": "weatherData.json",
+					"type": "Expression"
+				},
 				"folderPath": "Bronze",
 				"fileSystem": "phsblob"
 			}
