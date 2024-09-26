@@ -299,8 +299,7 @@
 				},
 				"parameters": {
 					"filename": {
-						"type": "string",
-						"defaultValue": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+						"type": "string"
 					}
 				},
 				"annotations": [],
@@ -309,7 +308,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "Weather_History_@dataset().filename",
+							"value": "@dataset().filename",
 							"type": "Expression"
 						},
 						"folderPath": "Bronze/History",
@@ -516,7 +515,10 @@
 											"referenceName": "WeatherSink",
 											"type": "DatasetReference",
 											"parameters": {
-												"filename": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+												"filename": {
+													"value": "@concat('Weather_History_',formatDateTime(item().start, 'yyyyMMdd'),'.json')",
+													"type": "Expression"
+												}
 											}
 										}
 									]
