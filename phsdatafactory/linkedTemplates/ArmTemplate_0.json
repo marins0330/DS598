@@ -516,7 +516,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"filename": {
-													"value": "airPollutionData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+													"value": "Weather_History_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
 													"type": "Expression"
 												}
 											}
