@@ -1,5 +1,5 @@
 {
-	"name": "HistoricalWeatherDataPipeline",
+	"name": "HistWeatherPipeline",
 	"properties": {
 		"activities": [
 			{
