@@ -5,11 +5,17 @@
 		"factoryName": {
 			"value": "phsdatafactory"
 		},
+		"AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
 		"GitHub1_credential": {
 			"value": ""
 		},
-		"AzureDataLakeStorage_accountKey": {
-			"value": ""
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://phsstorage.dfs.core.windows.net/"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://phs-ds587-keyvault.vault.azure.net/"
 		},
 		"GitHub1_properties_typeProperties_username": {
 			"value": "marins0330"
@@ -19,12 +25,6 @@
 		},
 		"RestService_Weather_properties_typeProperties_url": {
 			"value": "https://history.openweathermap.org/"
-		},
-		"AzureDataLakeStorage_properties_typeProperties_url": {
-			"value": "https://phsstorage.dfs.core.windows.net/"
-		},
-		"AzureKeyVault_properties_typeProperties_baseUrl": {
-			"value": "https://phs-ds587-keyvault.vault.azure.net/"
 		}
 	}
 }
