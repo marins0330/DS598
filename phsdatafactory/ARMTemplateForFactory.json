@@ -124,8 +124,14 @@
 								"parameters": {
 									"lat": "\"42.3601\"",
 									"lon": "\"-71.0589\"",
-									"start": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
-									"end": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}",
+									"start": {
+										"value": "@div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
+										"type": "Expression"
+									},
+									"end": {
+										"value": "@div(sub(ticks(utcNow()), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
+										"type": "Expression"
+									},
 									"appid": "@activity('GetAPIKey').output.value"
 								}
 							}
@@ -296,11 +302,11 @@
 					},
 					"start": {
 						"type": "string",
-						"defaultValue": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+						"defaultValue": "@div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)"
 					},
 					"end": {
 						"type": "string",
-						"defaultValue": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+						"defaultValue": "@div(sub(ticks(utcNow()), ticks('1970-01-01T00:00:00Z')), 10000000)"
 					},
 					"appid": {
 						"type": "string",
