@@ -1,0 +1,29 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string",
+				"defaultValue": "@{div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "Weather_History_@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": "Bronze/History",
+				"fileSystem": "phsblob"
+			}
+		},
+		"schema": {}
+	}
+}

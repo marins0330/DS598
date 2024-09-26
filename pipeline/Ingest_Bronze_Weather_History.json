@@ -43,11 +43,38 @@
 										"supportRFC5988": "true"
 									}
 								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
 								"enableStaging": false
 							},
 							"inputs": [
 								{
 									"referenceName": "RestResource1",
+									"type": "DatasetReference",
+									"parameters": {
+										"lat": "42.3601",
+										"dataType": "hour",
+										"start": {
+											"value": "@div(sub(ticks(addDays(utcNow(), add(mul(-7, item()), -7))), ticks('1970-01-01T00:00:00Z')), 10000000)",
+											"type": "Expression"
+										},
+										"end": {
+											"value": "@div(sub(ticks(addDays(utcNow(), mul(-7, item()))), ticks('1970-01-01T00:00:00Z')), 10000000)",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Json1",
 									"type": "DatasetReference"
 								}
 							]
