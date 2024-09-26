@@ -1,5 +1,5 @@
 {
-	"name": "HistAirPollPipeline",
+	"name": "Ingest_Bronze_AirPollution_History",
 	"properties": {
 		"activities": [
 			{
@@ -24,7 +24,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "AirPollutionData",
 				"type": "Copy",
 				"dependsOn": [
 					{
