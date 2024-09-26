@@ -8,11 +8,11 @@
 		"parameters": {
 			"lat": {
 				"type": "string",
-				"defaultValue": "\"42.3601\""
+				"defaultValue": "42.3601"
 			},
 			"lon": {
 				"type": "string",
-				"defaultValue": "\"-71.0589\""
+				"defaultValue": "-71.0589"
 			},
 			"start": {
 				"type": "string",
