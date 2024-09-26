@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "AirPollution_History.json",
-				"folderPath": "Bronze",
+				"folderPath": "Bronze/History/",
 				"fileSystem": "phsblob"
 			}
 		},
