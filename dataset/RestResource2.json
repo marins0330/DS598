@@ -14,6 +14,14 @@
 				"type": "string",
 				"defaultValue": "\"-71.0589\""
 			},
+			"start": {
+				"type": "string",
+				"defaultValue": "@{div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+			},
+			"end": {
+				"type": "string",
+				"defaultValue": "@{div(sub(ticks(addDays(utcNow(), -1)), ticks('1970-01-01T00:00:00Z')), 10000000)}"
+			},
 			"appid": {
 				"type": "string",
 				"defaultValue": "@activity('GetAPIKey').output.value"
@@ -22,7 +30,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}"
+			"relativeUrl": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
 		},
 		"schema": []
 	}
