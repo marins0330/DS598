@@ -52,11 +52,29 @@
 							"supportRFC5988": "true"
 						}
 					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "RestResource2",
+						"type": "DatasetReference",
+						"parameters": {
+							"start": "@activity('GetAPIKey').output.value"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AirPollutionjson",
 						"type": "DatasetReference"
 					}
 				]

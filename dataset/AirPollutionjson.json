@@ -1,0 +1,20 @@
+{
+	"name": "AirPollutionjson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "airPollutionData_@{formatDateTime(item().start, 'yyyyMMdd')}.json",
+				"folderPath": "Bronze",
+				"fileSystem": "phsblob"
+			}
+		},
+		"schema": {}
+	}
+}
