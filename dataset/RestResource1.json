@@ -25,15 +25,14 @@
 				"type": "string"
 			},
 			"appid": {
-				"type": "string",
-				"defaultValue": "@activity('GetAPIKey').output.value"
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "data/2.5/history/city?lat=@{dataset().lat}&lon=@{dataset().lon}&type=hour&start={dataset().start}&end={dataset().end}&appid=@{dataset().appid}",
+				"value": "data/2.5/history/city?lat=@{dataset().lat}&lon=@{dataset().lon}&type=hour&start=@{dataset().start}&end=@{dataset().end}&appid=@{dataset().appid}\n",
 				"type": "Expression"
 			}
 		},
