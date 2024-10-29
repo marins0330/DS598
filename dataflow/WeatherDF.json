@@ -26,7 +26,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> WeatherSource"
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['phsblob/Bronze/History/Weather*']) ~> WeatherSource"
 			]
 		}
 	}
