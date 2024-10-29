@@ -799,7 +799,7 @@
 						"selectAirPollution sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['concat(\"Preprocess_Silver_AirPollution_\", toString(currentUTC(),\\'yyyyMMdd_HHmm\\',\\'America/New_York\\'),\\'.parquet\\')'],",
+						"     partitionFileNames:[(concat(\"Preprocess_Silver_AirPollution_\", toString(currentUTC(),'yyyyMMdd_HHmm','America/New_York'),'.parquet'))],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
