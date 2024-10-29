@@ -507,13 +507,19 @@
 					"referenceName": "AzureDataLakeStorage",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"timenow": {
+						"type": "string",
+						"defaultValue": "@formatDateTime(utcnow(), 'yyyyMMdd_HHmm')"
+					}
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@concat('Preprocess_Silver_Weather_', formatDateTime(utcnow(), 'yyyyMMdd_HHmm'), '.parquet')",
+							"value": "@concat('Preprocess_Silver_Weather_', dataset().timenow, '.parquet')",
 							"type": "Expression"
 						},
 						"folderPath": "Silver/History",
