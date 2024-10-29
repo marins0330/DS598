@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"filename": {
-				"type": "string",
-				"defaultValue": "@{formatDateTime(addDays(utcNow(), add(mul(-7, add(item(), 1)), -7)), 'yyyyMMdd')}"
+				"type": "string"
 			}
 		},
 		"annotations": [],
