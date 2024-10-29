@@ -1,0 +1,25 @@
+{
+	"name": "PollutionDF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AirPollutionSink",
+						"type": "DatasetReference"
+					},
+					"name": "AirPollutionSink"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> AirPollutionSink"
+			]
+		}
+	}
+}
