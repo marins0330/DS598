@@ -1,0 +1,20 @@
+{
+	"name": "SilverAirPollutionSink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Silver/History",
+				"fileSystem": "phsblob"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

@@ -14,6 +14,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "SilverAirPollutionSink",
+						"type": "DatasetReference"
+					},
 					"name": "SilverAirPollutionSink"
 				}
 			],
@@ -31,7 +35,7 @@
 					"name": "derivedColumn2AirPollution"
 				},
 				{
-					"name": "select1"
+					"name": "selectAirPollution"
 				}
 			],
 			"scriptLines": [
@@ -92,11 +96,17 @@
 				"          id",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectAirPollution",
+				"selectAirPollution sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['concat(\"Preprocess_Silver_AirPollution_\", toString(currentUTC(),\\'yyyyMMdd_HHmm\\',\\'America/New_York\\'),\\'.parquet\\')'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> SilverAirPollutionSink"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> SilverAirPollutionSink"
 			]
 		}
 	}
