@@ -76,13 +76,7 @@
 							"outputs": [
 								{
 									"referenceName": "WeatherSink",
-									"type": "DatasetReference",
-									"parameters": {
-										"filename": {
-											"value": "@{formatDateTime(addDays(utcNow(), add(mul(-7, add(item(), 1)), -7)), 'yyyyMMdd')}",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							]
 						}
