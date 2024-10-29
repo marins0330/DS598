@@ -12,10 +12,30 @@
 					"name": "WeatherSource"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SilverWeatherSink",
+						"type": "DatasetReference"
+					},
+					"name": "SilverWeatherSink"
+				}
+			],
 			"transformations": [
 				{
-					"name": "flatten1"
+					"name": "flattenWeather"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -25,7 +45,7 @@
 				"          city_id as integer,",
 				"          calctime as double,",
 				"          cnt as integer,",
-				"          list as (dt as integer, main as (temp as double, feels_like as double, pressure as integer, humidity as integer, temp_min as double, temp_max as double), wind as (speed as double, deg as integer, gust as double), clouds as (all as integer), weather as (id as integer, main as string, description as string, icon as string)[])[]",
+				"          list as (dt as integer, main as (temp as double, feels_like as double, pressure as integer, humidity as integer, temp_min as double, temp_max as double), wind as (speed as double, deg as integer, gust as double), clouds as (all as integer), weather as (id as integer, main as string, description as string, icon as string)[], rain as ({1h} as double))[]",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -53,10 +73,73 @@
 				"          weather_id = list.weather.id,",
 				"          weather_main = list.weather.main,",
 				"          weather_description = list.weather.description,",
-				"          weather_icon = list.weather.icon",
+				"          weather_icon = list.weather.icon,",
+				"          rain_1h = list.rain.{1h}",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten1"
+				"     skipDuplicateMapOutputs: false) ~> flattenWeather",
+				"flattenWeather derive(corrected_timestamp = iif(length(toString(timestamp)) > 10, toInteger(null()), timestamp),",
+				"          location = 'Boston') ~> derivedColumn1",
+				"derivedColumn1 filter(!isNull(temp) && !isNull(humidity) && !isNull(timestamp)",
+				") ~> filter1",
+				"filter1 derive(date_time = toTimestamp(toLong(corrected_timestamp) * 1000)     ,",
+				"          id = concat(location, '_', toString(corrected_timestamp)),",
+				"          temp_C = round(temp - 273.15, 2)     ,",
+				"          temp_min_C = round(temp_min - 273.15, 2)     ,",
+				"          temp_max_C = round(temp_max - 273.15, 2)     ,",
+				"          feels_like_C = round(feels_like - 273.15, 2)     ,",
+				"          temp_min_F = round(((temp_min - 273.15) * 9/5) + 32, 2)     ,",
+				"          temp_max_F = round(((temp_max - 273.15) * 9/5) + 32, 2)     ,",
+				"          feels_like_F = round(((feels_like - 273.15) * 9/5) + 32, 2)     ,",
+				"          lon = -71.0589     ,",
+				"          lat = 42.3601,",
+				"          weather_id_value = toInteger(split(toString(weather_id[1]),': ')[1]),",
+				"          weather_main_value = weather_main     ,",
+				"          weather_description_value = weather_description,",
+				"          weather_icon_value = weather_icon,",
+				"          rain_1h = iif(isNull(rain_1h), toFloat(0.0), toFloat(rain_1h))) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          temp_K = temp,",
+				"          feels_like_K = feels_like,",
+				"          pressure,",
+				"          humidity,",
+				"          temp_min_K = temp_min,",
+				"          temp_max_K = temp_max,",
+				"          wind_speed,",
+				"          wind_deg,",
+				"          wind_gust,",
+				"          clouds_all,",
+				"          rain_1h,",
+				"          corrected_timestamp,",
+				"          location,",
+				"          date_time,",
+				"          id,",
+				"          temp_C,",
+				"          temp_min_C,",
+				"          temp_max_C,",
+				"          feels_like_C,",
+				"          temp_min_F,",
+				"          temp_max_F,",
+				"          feels_like_F,",
+				"          lon,",
+				"          lat,",
+				"          weather_id_value,",
+				"          weather_main_value,",
+				"          weather_description_value,",
+				"          weather_icon_value",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:[''],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> SilverWeatherSink"
 			]
 		}
 	}
