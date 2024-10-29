@@ -132,7 +132,7 @@
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     partitionFileNames:['@concat(\\'Preprocess_Silver_Weather_\\', formatDateTime(utcnow(), \\'yyyyMMdd_HHmm\\'), \\'.parquet\\')'],",
+				"     partitionFileNames:[(concat(\"Preprocess_Silver_Weather_\", toString(currentUTC(),'yyyyMMdd_HHmm','AEST'),'.parquet'))],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
