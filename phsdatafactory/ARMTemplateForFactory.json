@@ -299,7 +299,8 @@
 								"datasetParameters": {
 									"WeatherSource": {},
 									"SilverWeatherSink": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -513,7 +514,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "concat('Preprocess_Silver_Weather_', formatDateTime(utcnow(), 'yyyyMMdd_HHmm'), '.parquet')",
+							"value": "concat(\"Preprocess_Silver_Weather_\", toString(currentUTC(),'yyyyMMdd_HHmm','AEST'),'.parquet')",
 							"type": "Expression"
 						},
 						"folderPath": "Silver/History",
@@ -868,7 +869,7 @@
 						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['@concat(\\'Preprocess_Silver_Weather_\\', formatDateTime(utcnow(), \\'yyyyMMdd_HHmm\\'), \\'.parquet\\')'],",
+						"     partitionFileNames:[(concat(\"Preprocess_Silver_Weather_\", toString(currentUTC(),'yyyyMMdd_HHmm','AEST'),'.parquet'))],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
