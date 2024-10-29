@@ -15,11 +15,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@concat('Weather_History_', dataset().filename, '.json')",
-					"type": "Expression"
-				},
-				"folderPath": "Bronze/History",
+				"folderPath": "Bronze/History/Weather",
 				"fileSystem": "phsblob"
 			}
 		},
