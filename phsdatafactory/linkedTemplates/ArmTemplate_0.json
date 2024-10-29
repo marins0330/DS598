@@ -225,12 +225,10 @@
 						"defaultValue": "-71.0589"
 					},
 					"start": {
-						"type": "string",
-						"defaultValue": "@div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)"
+						"type": "string"
 					},
 					"end": {
-						"type": "string",
-						"defaultValue": "@div(sub(ticks(utcNow()), ticks('1970-01-01T00:00:00Z')), 10000000)"
+						"type": "string"
 					},
 					"appid": {
 						"type": "string",
@@ -241,11 +239,7 @@
 				"type": "Json",
 				"typeProperties": {
 					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "/data/2.5/air_pollution/history?lat=@{dataset().lat}&lon=@{dataset().lon}&start=@{dataset().start}&end=@{dataset().end}&appid=@{dataset().appid}",
-							"type": "Expression"
-						}
+						"type": "HttpServerLocation"
 					}
 				},
 				"schema": {}
@@ -550,14 +544,8 @@
 								"parameters": {
 									"lat": "42.3601",
 									"lon": "-71.0589",
-									"start": {
-										"value": "@div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
-										"type": "Expression"
-									},
-									"end": {
-										"value": "@div(sub(ticks(utcNow()), ticks('1970-01-01T00:00:00Z')), 10000000)\n",
-										"type": "Expression"
-									},
+									"start": "@div(sub(ticks(addDays(utcNow(), -365)), ticks('1970-01-01T00:00:00Z')), 10000000)",
+									"end": "@div(sub(ticks(utcNow()), ticks('1970-01-01T00:00:00Z')), 10000000)",
 									"appid": "@activity('GetAPIKey').output.value"
 								}
 							}
@@ -734,9 +722,6 @@
 					],
 					"transformations": [
 						{
-							"name": "flattenAirPollution"
-						},
-						{
 							"name": "derivedColumn1AirPollution"
 						},
 						{
@@ -747,6 +732,9 @@
 						},
 						{
 							"name": "selectAirPollution"
+						},
+						{
+							"name": "flattenAirPollution"
 						}
 					],
 					"scriptLines": [
@@ -759,24 +747,7 @@
 						"     ignoreNoFilesFound: false,",
 						"     documentForm: 'documentPerLine',",
 						"     wildcardPaths:['Bronze/History/AirPollution/*.json']) ~> AirPollutionSource",
-						"AirPollutionSource foldDown(unroll(),",
-						"     mapColumn(",
-						"          lon = coord.lon,",
-						"          lat = coord.lat,",
-						"          timestamp = list.dt,",
-						"          aqi = list.main.aqi,",
-						"          co = list.components.co,",
-						"          no = list.components.no,",
-						"          no2 = list.components.no2,",
-						"          o3 = list.components.o3,",
-						"          so2 = list.components.so2,",
-						"          pm2_5 = list.components.pm2_5,",
-						"          pm10 = list.components.pm10,",
-						"          nh3 = list.components.nh3",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flattenAirPollution",
-						"flattenAirPollution derive(corrected_timestamp = iif(length(toString(timestamp)) == 10, toInteger(timestamp), toInteger(null())),",
+						"flattenAirPollution derive(corrected_timestamp = iif(length(toString(timestamp)) > 10, toInteger(null()), timestamp),",
 						"          location = 'Boston') ~> derivedColumn1AirPollution",
 						"derivedColumn1AirPollution filter(!isNull(aqi) && !isNull(timestamp)) ~> filterAirPollution",
 						"filterAirPollution derive(date_time = toTimestamp(toLong(corrected_timestamp) * 1000),",
@@ -808,6 +779,23 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectAirPollution",
+						"AirPollutionSource foldDown(unroll(list),",
+						"     mapColumn(",
+						"          lon = coord.lon,",
+						"          lat = coord.lat,",
+						"          timestamp = list.dt,",
+						"          aqi = list.main.aqi,",
+						"          co = list.components.co,",
+						"          no = list.components.no,",
+						"          no2 = list.components.no2,",
+						"          o3 = list.components.o3,",
+						"          so2 = list.components.so2,",
+						"          pm2_5 = list.components.pm2_5,",
+						"          pm10 = list.components.pm10,",
+						"          nh3 = list.components.nh3",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flattenAirPollution",
 						"selectAirPollution sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
