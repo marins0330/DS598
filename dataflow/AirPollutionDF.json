@@ -65,7 +65,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flattenAirPollution",
-				"flattenAirPollution derive(corrected_timestamp = iif(length(toString(timestamp)) > 10, toInteger(null()), timestamp),",
+				"flattenAirPollution derive(corrected_timestamp = iif(length(toString(timestamp)) == 10, toInteger(timestamp), toInteger(null())),",
 				"          location = 'Boston') ~> derivedColumn1AirPollution",
 				"derivedColumn1AirPollution filter(!isNull(aqi) && !isNull(timestamp)) ~> filterAirPollution",
 				"filterAirPollution derive(date_time = toTimestamp(toLong(corrected_timestamp) * 1000),",
