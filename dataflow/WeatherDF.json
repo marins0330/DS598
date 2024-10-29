@@ -1,0 +1,26 @@
+{
+	"name": "WeatherDF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "WeatherSink",
+						"type": "DatasetReference"
+					},
+					"name": "WeatherSink"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['Weather_History_*.json']) ~> WeatherSink"
+			]
+		}
+	}
+}
