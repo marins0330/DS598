@@ -9,17 +9,68 @@
 						"referenceName": "WeatherSink",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "WeatherSource"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'documentPerLine',",
-				"     wildcardPaths:['phsblob/Bronze/*.json']) ~> source1"
+				"     wildcardPaths:['phsblob/Bronze/History/Weather_History_*.json']) ~> WeatherSource",
+				"WeatherSource foldDown(unroll(),",
+				"     mapColumn(",
+				"          each(match(calctime),",
+				"               calctime = $$),",
+				"          each(match(city_id),",
+				"               city_id = $$),",
+				"          each(match(cnt),",
+				"               cnt = $$),",
+				"          each(match(cod),",
+				"               cod = $$),",
+				"          each(match(message),",
+				"               message = $$),",
+				"          each(match(list.clouds.all),",
+				"               clouds_all = $$),",
+				"          each(match(list.dt),",
+				"               timestamp = $$),",
+				"          each(match(list.main.feels_like),",
+				"               feels_like = $$),",
+				"          each(match(list.main.humidity),",
+				"               humidity = $$),",
+				"          each(match(list.main.pressure),",
+				"               pressure = $$),",
+				"          each(match(list.main.temp),",
+				"               temp = $$),",
+				"          each(match(list.main.temp_max),",
+				"               temp_max = $$),",
+				"          each(match(list.main.temp_min),",
+				"               temp_min = $$),",
+				"          each(match(list.weather.description),",
+				"               weather_description = $$),",
+				"          each(match(list.weather.icon),",
+				"               weather_icon = $$),",
+				"          each(match(list.weather.id),",
+				"               weather_id = $$),",
+				"          each(match(list.weather.main),",
+				"               weather_main = $$),",
+				"          each(match(list.wind.deg),",
+				"               wind_deg = $$),",
+				"          each(match(list.wind.gust),",
+				"               wind_gust = $$),",
+				"          each(match(list.wind.speed),",
+				"               wind_speed = $$),",
+				"          each(match(list.rain.{1h}),",
+				"               rain_1h = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
 			]
 		}
 	}
