@@ -6,10 +6,10 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "RestResource1",
+						"referenceName": "WeatherSink",
 						"type": "DatasetReference"
 					},
-					"name": "WeatherSink"
+					"name": "source1"
 				}
 			],
 			"sinks": [],
@@ -17,10 +17,9 @@
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     httpMethod: 'GET',",
-				"     timeout: 30,",
-				"     requestInterval: 0,",
-				"     wildcardPaths:['Weather_History_*.json']) ~> WeatherSink"
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['phsblob/Bronze/*.json']) ~> source1"
 			]
 		}
 	}
