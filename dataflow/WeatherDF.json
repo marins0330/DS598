@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "WeatherSink",
+						"referenceName": "RestResource1",
 						"type": "DatasetReference"
 					},
 					"name": "WeatherSink"
@@ -17,8 +17,9 @@
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine',",
+				"     httpMethod: 'GET',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
 				"     wildcardPaths:['Weather_History_*.json']) ~> WeatherSink"
 			]
 		}
