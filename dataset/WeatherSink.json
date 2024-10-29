@@ -113,6 +113,14 @@
 										}
 									}
 								}
+							},
+							"rain": {
+								"type": "object",
+								"properties": {
+									"1h": {
+										"type": "number"
+									}
+								}
 							}
 						}
 					}
