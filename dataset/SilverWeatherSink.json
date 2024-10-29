@@ -9,7 +9,10 @@
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"fileName": "@concat('Preprocess_Silver_Weather_', formatDateTime(utcnow(), 'yyyyMMdd_HHmm'), '.parquet')",
+				"folderPath": "Silver/History",
+				"fileSystem": "phsblob"
 			},
 			"compressionCodec": "snappy"
 		},
