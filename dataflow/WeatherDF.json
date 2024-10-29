@@ -51,7 +51,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'documentPerLine',",
-				"     wildcardPaths:['phsblob/Bronze/History/Weather*']) ~> WeatherSource",
+				"     wildcardPaths:['phsblob/Bronze/History/Weather/*']) ~> WeatherSource",
 				"WeatherSource foldDown(unroll(list),",
 				"     mapColumn(",
 				"          message,",
