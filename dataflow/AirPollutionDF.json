@@ -13,12 +13,20 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> AirPollutionSource"
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['phsblob/Bronze/History/AirPollution_History.json']) ~> AirPollutionSource",
+				"AirPollutionSource foldDown(unroll(),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
 			]
 		}
 	}
