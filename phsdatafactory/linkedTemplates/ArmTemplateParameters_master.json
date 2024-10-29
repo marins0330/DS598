@@ -11,9 +11,6 @@
 		"GitHub1_credential": {
 			"value": ""
 		},
-		"AirPollutionREST_properties_typeProperties_url": {
-			"value": "http://api.openweathermap.org/data/2.5/air_pollution/history?lat={lat}&lon={lon}&start={start}&end={end}&appid={API key}"
-		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://phsstorage.dfs.core.windows.net/"
 		},
@@ -25,12 +22,6 @@
 		},
 		"HttpAirPollution_properties_typeProperties_url": {
 			"value": "http://api.openweathermap.org/"
-		},
-		"RestService_AirPollution_properties_typeProperties_url": {
-			"value": "http://api.openweathermap.org/"
-		},
-		"RestService_Weather_properties_typeProperties_url": {
-			"value": "https://history.openweathermap.org/"
 		},
 		"REST_Bronze_Weather_History_properties_typeProperties_url": {
 			"value": "https://history.openweathermap.org/"
